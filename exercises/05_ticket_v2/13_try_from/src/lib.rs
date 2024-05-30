@@ -1,11 +1,52 @@
 // TODO: Implement `TryFrom<String>` and `TryFrom<&str>` for `Status`.
 //  The parsing should be case-insensitive.
 
+
+use thiserror::Error;
+
 #[derive(Debug, PartialEq, Clone)]
 enum Status {
     ToDo,
     InProgress,
     Done,
+}
+
+#[derive(Debug, Error)]
+enum CoverError {
+    #[error("转换失败")]
+    CoverFail
+}
+
+impl TryFrom<String> for Status {
+    type Error = CoverError;
+
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        if value == String::from("ToDO") {
+            Ok(Status::ToDo)
+        } else if value == String::from("inproGress") {
+            Ok(Status::InProgress)
+        } else if value == String::from("Done") {
+            Ok(Status::Done)
+        } else {
+            Err(CoverError::CoverFail)
+        }
+    }
+}
+
+impl TryFrom<&str> for Status {
+    type Error = CoverError;
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        if value == "todo" {
+            Ok(Status::ToDo)
+        } else if value == "inprogress" {
+            Ok(Status::InProgress)
+        } else if value == "done" {
+            Ok(Status::Done)
+        } else {
+            Err(CoverError::CoverFail)
+        }
+    }
 }
 
 #[cfg(test)]
